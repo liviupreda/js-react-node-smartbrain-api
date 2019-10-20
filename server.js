@@ -1,5 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const bcrypt = require('bcryptjs');
+
 const port = 3000;
 const app = express();
 
@@ -11,7 +13,6 @@ const database = {
       id: '123',
       name: 'John',
       email: 'john@gmail.com',
-      password: 'cookies',
       entries: 0,
       joined: new Date()
     },
@@ -19,13 +20,21 @@ const database = {
       id: '124',
       name: 'Sally',
       email: 'sally@gmail.com.com',
-      password: 'bananas',
       entries: 0,
       joined: new Date()
+    }
+  ],
+  login: [
+    {
+      id: '987',
+      hash: '',
+      email: 'john@gmail.com'
     }
   ]
 };
 
+// ROUTES
+// GET root
 app.get('/', (req, res) => {
   res.send(database.users);
 });
@@ -87,6 +96,22 @@ app.put('/image', (req, res) => {
   }
 });
 
+// // Password hashing
+// bcrypt.genSalt(10, function(err, salt) {
+//   bcrypt.hash('B4c0//', salt, function(err, hash) {
+//     // Store hash in your password DB.
+//   });
+// });
+
+// // Load hash from your password DB.
+// bcrypt.compare('B4c0//', hash, function(err, res) {
+//   // res === true
+// });
+// bcrypt.compare('not_bacon', hash, function(err, res) {
+//   // res === false
+// });
+
+// LISTEN
 app.listen(port, () => {
   console.log(`App running on port: ${port}`);
 });
