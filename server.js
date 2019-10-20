@@ -71,14 +71,22 @@ app.get('/profile/:id', (req, res) => {
   }
 });
 
+// PUT add image entries
+app.put('/image', (req, res) => {
+  const { id } = req.body;
+  let found = false;
+  database.users.forEach(user => {
+    if (user.id === id) {
+      found = true;
+      user.entries++;
+      return res.json(user.entries);
+    }
+  });
+  if (!found) {
+    res.status(400).json('User not found...');
+  }
+});
+
 app.listen(port, () => {
   console.log(`App running on port: ${port}`);
 });
-
-/*
-/ --> res = Running ...
-/signin --> POST = success/ fail
-/register --> POST = user
-/profile/:userId --> GET = user
-/image --> PUT --> user
-*/
