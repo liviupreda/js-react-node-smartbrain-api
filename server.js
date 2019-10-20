@@ -42,7 +42,7 @@ app.post('/signin', (req, res) => {
   }
 });
 
-// CREATE NEW USER
+// CREATE new user
 app.post('/register', (req, res) => {
   const { name, email, password } = req.body;
   database.users.push({
@@ -56,6 +56,21 @@ app.post('/register', (req, res) => {
   res.json(database.users[database.users.length - 1]);
 });
 
+// GET user
+app.get('/profile/:id', (req, res) => {
+  const { id } = req.params;
+  let found = false;
+  database.users.forEach(user => {
+    if (user.id === id) {
+      found = true;
+      return res.json(user);
+    }
+  });
+  if (!found) {
+    res.status(400).json('User not found');
+  }
+});
+
 app.listen(port, () => {
   console.log(`App running on port: ${port}`);
 });
@@ -64,6 +79,6 @@ app.listen(port, () => {
 / --> res = Running ...
 /signin --> POST = success/ fail
 /register --> POST = user
-/profile/:userId --> GET
+/profile/:userId --> GET = user
 /image --> PUT --> user
 */
