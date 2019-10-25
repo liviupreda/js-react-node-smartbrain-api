@@ -14,38 +14,11 @@ const db = knex({
   }
 });
 
-// db.select('*')
-//   .from('users')
-//   .then(data => {
-//     console.log(data);
-//   });
-
 const port = 3000;
 const app = express();
 
 app.use(bodyParser.json());
 app.use(cors());
-
-// const database = {
-//   users: [
-//     {
-//       id: '123',
-//       name: 'John',
-//       password: 'cookies',
-//       email: 'john@gmail.com',
-//       entries: 0,
-//       joined: new Date()
-//     },
-//     {
-//       id: '124',
-//       name: 'Sally',
-//       password: 'bananas',
-//       email: 'sally@gmail.com',
-//       entries: 0,
-//       joined: new Date()
-//     }
-//   ]
-// };
 
 // ROUTES
 // GET root
@@ -55,14 +28,25 @@ app.get('/', (req, res) => {
 
 // SIGN IN
 app.post('/signin', (req, res) => {
-  if (
-    req.body.email === database.users[0].email &&
-    req.body.password === database.users[0].password
-  ) {
-    res.json(database.users[0]);
-  } else {
-    res.status(400).json('ERR Login');
-  }
+  db.select('email', 'hash')
+    .from('login')
+    .where('email', '=', req.body.email)
+    .then(data => {
+      const isValid = bcrypt.compareSync(req.body.password, data[0].hash);
+      if (isValid) {
+        return db
+          .select('*')
+          .from('users')
+          .where('email', '=', req.body.email)
+          .then(user => {
+            res.json(user[0]);
+          })
+          .catch(err => res.status(400).json('Unable to get user'));
+      } else {
+        res.status(400).json('Wrong credentials');
+      }
+    })
+    .catch(err => res.status(400).json('Wrong credentials'));
 });
 
 // REGISTER
@@ -121,21 +105,6 @@ app.put('/image', (req, res) => {
     })
     .catch(err => res.status(400).json('unable to get entries'));
 });
-
-// // Password hashing
-// bcrypt.genSalt(10, function(err, salt) {
-//   bcrypt.hash('B4c0//', salt, function(err, hash) {
-//     // Store hash in your password DB.
-//   });
-// });
-
-// // Load hash from your password DB.
-// bcrypt.compare('B4c0//', hash, function(err, res) {
-//   // res === true
-// });
-// bcrypt.compare('not_bacon', hash, function(err, res) {
-//   // res === false
-// });
 
 // LISTEN
 app.listen(port, () => {
