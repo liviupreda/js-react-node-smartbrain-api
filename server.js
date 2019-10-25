@@ -2,6 +2,19 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcryptjs');
 const cors = require('cors');
+const knex = require('knex');
+
+const pg = knex({
+  client: 'pg',
+  connection: {
+    host: '127.0.0.1',
+    user: 'liviu',
+    password: '',
+    database: 'smart-brain'
+  }
+});
+
+console.log(pg.select('*').from('users'));
 
 const port = 3000;
 const app = express();
@@ -9,26 +22,26 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
-const database = {
-  users: [
-    {
-      id: '123',
-      name: 'John',
-      password: 'cookies',
-      email: 'john@gmail.com',
-      entries: 0,
-      joined: new Date()
-    },
-    {
-      id: '124',
-      name: 'Sally',
-      password: 'bananas',
-      email: 'sally@gmail.com',
-      entries: 0,
-      joined: new Date()
-    }
-  ]
-};
+// const database = {
+//   users: [
+//     {
+//       id: '123',
+//       name: 'John',
+//       password: 'cookies',
+//       email: 'john@gmail.com',
+//       entries: 0,
+//       joined: new Date()
+//     },
+//     {
+//       id: '124',
+//       name: 'Sally',
+//       password: 'bananas',
+//       email: 'sally@gmail.com',
+//       entries: 0,
+//       joined: new Date()
+//     }
+//   ]
+// };
 
 // ROUTES
 // GET root
