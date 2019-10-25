@@ -14,11 +14,11 @@ const db = knex({
   }
 });
 
-db.select('*')
-  .from('users')
-  .then(data => {
-    console.log(data);
-  });
+// db.select('*')
+//   .from('users')
+//   .then(data => {
+//     console.log(data);
+//   });
 
 const port = 3000;
 const app = express();
@@ -84,16 +84,16 @@ app.post('/register', (req, res) => {
 // GET user
 app.get('/profile/:id', (req, res) => {
   const { id } = req.params;
-  let found = false;
-  database.users.forEach(user => {
-    if (user.id === id) {
-      found = true;
-      return res.json(user);
-    }
-  });
-  if (!found) {
-    res.status(400).json('User not found');
-  }
+  db.select('*')
+    .from('users')
+    .where({ id })
+    .then(user => {
+      if (user.length) {
+        res.json(user[0]);
+      } else {
+        res.status(400).json('Error getting user');
+      }
+    });
 });
 
 // PUT add image entries
