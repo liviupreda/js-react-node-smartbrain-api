@@ -19,7 +19,6 @@ const db = knex({
   }
 });
 
-const port = 3000;
 const PORT = process.env.PORT;
 const app = express();
 
@@ -47,6 +46,6 @@ app.post('/imageurl', (req, res) => {
 });
 
 // LISTEN
-app.listen(port, () => {
-  console.log(`App running on port: ${port}`);
+app.listen(PORT || 3000, () => {
+  console.log(`App running on port: ${PORT}`);
 });
