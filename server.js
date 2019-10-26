@@ -27,7 +27,7 @@ app.use(cors());
 
 // ROUTES
 app.get('/', (req, res) => {
-  res.send(database.users);
+  res.send('APP RUNNING');
 });
 app.post('/signin', (req, res) => {
   signin.handleSignin(req, res, db, bcrypt);
